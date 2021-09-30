@@ -587,7 +587,7 @@ more system:running-config | in key
 show interfaces | incl line|\/sec
 ***
 output redirect
-show ip nat translations | redirect ftp://usertest:Qwerty14@front.geolife.ru/nat.txt
+show ip nat translations | redirect ftp://username:password@hostname.example.lan/nat.txt
 ***
 ACLs
 *dynamic VPN IPSEC where 195.19.88.9 vpn host
