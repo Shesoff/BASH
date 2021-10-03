@@ -15,8 +15,13 @@ brew install libpq
 ln -s /usr/local/Cellar/libpq/10.3/bin/psql /usr/local/bin/psql
 
 
-Linux|Unix
-# lsof  
+# Linux || Unix
+## Change default visual & editor
+```
+export VISUAL=nano
+export EDITOR="$VISUAL"
+```
+### lsof  
 * ожидает поключение
   `lsof -Pi | grep LISTEN`  
 
