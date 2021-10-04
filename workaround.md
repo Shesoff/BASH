@@ -25,6 +25,12 @@ export EDITOR="$VISUAL"
 * ожидает поключение
   `lsof -Pi | grep LISTEN`  
 
+### Yum
+- Yum download rpm with dependencies  
+```
+yum install yum-plugin-downloadonly
+yum install --downloadonly --downloaddir=. <package-name>
+```
 
 # Файловые дескрипторы || file's descriptors
 ### кол-во открытых, не точное т.к. попадются строки одних и тех же файлов открытых другими процессами
@@ -1365,7 +1371,7 @@ make distclean - сброс (перед повторной конфигурац�
 
 # PostgreSQL
 ### Install
-https://www.postgresql.org/download/linux/redhat/
+Official install guide [here](https://www.postgresql.org/download/linux/)  
 ```
 sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 sudo yum install -y postgresql13-server
@@ -1374,7 +1380,7 @@ sudo systemctl enable postgresql-13
 sudo systemctl start postgresql-13
 ```
 ## Performance tuning
-_shared_buffers_ - inmemory buffer, set 25% from all RAM (max 40%). In some case you can set 70% if all your DB fits inmemory.   
+_shared_buffers_ - inmemory buffer, set 25% from all RAM. In some case you can set 70% if all your DB fits inmemory.   
 _work_mem_ - used for complex sorting. System will allocate work_mem * total sort operations for all users. If some operation need more memory then set in work_mem, than Postgres will create temporary file in *pgsql_tmp* directory. Look at *pgsql_tmp* in pick hours and make disisions, increas or not this parameter.   
 _maintenance_work_mem_ - reserving memory for maintenance tasks like VACUUM, RESTORE, CREATE INDEX, ADD FOREIGN KEY, and ALTER TABLE.
 _effective_cache_size_ -  
@@ -1626,16 +1632,7 @@ rm -rf /var/cache /var/log/dnf* /var/log/yum.*
 
 # DOCKER
 
-***CentOS***
-#
-# Yum download rpm with dependencies
-yum install yum-plugin-downloadonly
-yum install --downloadonly --downloaddir=. <package-name>
-#
-yum install -y yum-utils \
-  device-mapper-persistent-data \
-  lvm2
-#
+## Install
 sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 sudo yum install docker-ce docker-ce-cli containerd.io
 sudo systemctl enable --now docker
@@ -2046,9 +2043,8 @@ gitlab.somedomain.ru:5050/layer/video-rotor:develop-0.7.0-11b692aa
 # print only tag image
 awk -F":" '{print $3}' image_builded.txt | awk /./
 ```
-#
-#wireguard
-#
+# Wireguard
+```
 yum update
 yum install epel-release
 curl -Lo /etc/yum.repos.d/wireguard.repo https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/repo/epel-7/jdoss-wireguard-epel-7.repo
@@ -2061,9 +2057,10 @@ ip link add wg0 type wireguard
 ip addr add 10.0.0.1/24 dev wg0
 wg set wg0 private-key ./private
 ip link set wg0 up
+```
 
 
-
+# Maven
 maven mvn
 #build jar file
 # сохраняет либы в локальном кеше
