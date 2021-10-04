@@ -1640,24 +1640,31 @@ sudo systemctl enable --now docker
 `sudo groupadd docker`  
 `sudo usermod -aG docker $USER`  
 
-to /etc/sysctl.conf:
-#check: 
-sysctl net.ipv4.ip_forward
-#enable 
-sysctl -w net.ipv4.ip_forward=1
-#or
-echo 1 > /proc/sys/net/ipv4/ip_forward
-
+- to /etc/sysctl.conf:
+_check:_  
+``sysctl net.ipv4.ip_forward``
+_enable_  
+``sysctl -w net.ipv4.ip_forward=1``
+_or_  
+``echo 1 > /proc/sys/net/ipv4/ip_forward``
+### Network ip4 forward enable
+```
 net.ipv4.ip_forward=1
-#
 sysctl -p 
-***|||***
+```
+### Build
+``docker build -t jre8sms jre8-sms/.``
+### Run
+``docker run -it name_image command ``  
+_example:_ ``docker run -it centos bash``
 
-Built
-docker build -t jre8sms jre8-sms/.
-
-docker run -it name_image command 
-example: docker run -it centos bash
+### Docker save to disk
+_Compressing docker image:_  
+``docker save myimage:latest | gzip > myimage_latest.tar.gz``  
+_wihtout compressing save to disk:_  
+``docker save -o fedora-all.tar fedora``  
+_cherry-pick particular tags_  
+``docker save -o ubuntu.tar ubuntu:lucid ubuntu:saucy``  
 
 docker ps -all
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                      PORTS               NAMES
@@ -2267,7 +2274,7 @@ https://habr.com/ru/post/358182/
 Импорт ключей  
 ``gpg --import key_name.gpg``  
 
-# One liners onliners
+# One liners oneliners
 ## curl
 #### Speed latency http
 curl -w "dns_resolution: %{time_namelookup}, tcp_established: %{time_connect}, ssl_handshake_done: %{time_appconnect}, TTFB: %{time_starttransfer}\n" -o /dev/null -s https://cloudflare-dns.com  
