@@ -961,6 +961,9 @@ location <modifier> <prefix> {
 ...
 }
 ```
+## HTTPS TLS
+https://ssl-config.mozilla.org/  
+https://gist.github.com/paskal/628882bee1948ef126dd  
 ### return body
 ```
 location / {
