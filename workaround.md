@@ -971,7 +971,8 @@ location / {
     # because default content-type is application/octet-stream,
     # browser will offer to "save the file"...
     # if you want to see reply in browser, uncomment next line 
-    # add_header Content-Type text/plain;
+    # default_type application/json;
+    # or text/plain
 ```
 ### if file exist maintanance
 ```
@@ -1485,6 +1486,7 @@ grant all privileges on database dbname to testuser;
 #### Secont variable
 CREATE DATABASE dbname;
 CREATE USER user1 password 'P@ssw0rd!';
+ALTER ROLE "user1" WITH LOGIN;
 GRANT ALL ON DATABASE dbname TO user1;
 
 ## Logical replication
@@ -1527,7 +1529,7 @@ CREATE DATABASE redmine WITH ENCODING='UTF8' OWNER=redmine;
 ###
 
 
-Microsoft Network Monitor 3.4
+# Microsoft Network Monitor 3.4
 Conversation.ProcessName == "javaw.exe" - process capture
 
 ######################################################
@@ -2380,3 +2382,10 @@ Download object
 `s3cmd get s3://bucket/object local_file.txt`  
 Remove object  
 `s3cmd del s3://bucket/object`  
+
+# Trace 
+strace -f -e trace=file tmux
+
+# Data fromat
+### Linux
+`cp ./running_app/ app_bkp_$(date +'%Y%m%d')`
