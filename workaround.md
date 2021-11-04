@@ -121,8 +121,13 @@ lrwxrwxrwx 1 root root 17 2007-07-05 22:51 /etc/rc0.d/K91apache2 -> ../init.d/ap
 --//--
 lrwxrwxrwx 1 root root 17 2007-07-05 22:51 /etc/rc6.d/K91apache2 -> ../init.d/apache2
 # update-rc.d -f apache2 remove
-##
-apt-cache madison PACKAGE_NAME
+## apt package manager
+### Show all available versions of package_name
+``apt-cache madison PACKAGE_NAME``  
+### Add GPG key repo
+``apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub``  
+If your server behind proxy and apt-key was return time out (becase apt-key usign non http/https protocol, it use hpk://) use curl or wget, like this:  
+``curl -sSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub | apt-key add -``  
 
 
 
