@@ -339,6 +339,9 @@ pip install mycli
 ```
 pip freeze > requirements. txt
 ```
+### Alembic migrations
+``alembic history -v``  
+``alembic current``
 ### Install
 yum instal python36 python36-devel python36-setuptools python-virtualenv
 easy_install-3.6 pip
@@ -2307,8 +2310,11 @@ My any text body
 EOF
 ```
 
-~/.bash_profile - user mode (when login console or ssh)
-~/.bashrc - interactive mode (when run bash command or run bash script)
+~/.bash_profile - user mode (when login console or ssh)  
+~/.bashrc - interactive mode (when run bash command or run bash script)  
+### Adding directory to the PATH 
+``PATH=$PATH:$HOME/bin:/usr/local/bin``  
+``export PATH``  
 
 
 
