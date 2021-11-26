@@ -1457,6 +1457,30 @@ BEGIN
 END;
 $do$;
 ```
+* Create read only user *
+  create psql user:  
+```
+postgres@server:~$ createuser --interactive 
+Enter name of role to add: readonly
+Shall the new role be a superuser? (y/n) n
+Shall the new role be allowed to create databases? (y/n) n
+Shall the new role be allowed to create more new roles? (y/n) n
+```
+  set password for user  
+```
+postgres=# alter user readonly with password 'readonly';
+ALTER ROLE
+```
+  grant all the needed privileges  
+```
+target_database=# GRANT CONNECT ON DATABASE target_database TO readonly;
+GRANT
+target_database=# GRANT USAGE ON SCHEMA public TO readonly ;
+GRANT
+target_database=# GRANT SELECT ON ALL TABLES IN SCHEMA public TO readonly ;
+GRANT
+```
+
 ### Other
 pg_config - показывает ключи с которыми PostgreSQL был собран
 select pg_database_size('db_name'); - занимаемый разбер в байтах
@@ -1508,10 +1532,17 @@ alter subscription mc_process_db1 refresh publication ;
 \dRp+ publication_name  
 select * from pg_stat_replication ;  
 
+## Show
 ### show all schemas
 `\dn`  
 ### show all tables in schema
-`\dt public.*`
+`\dt schema_name.*`
+### show table structure
+`\d table_name`
+
+### Select examples
+`select concat (table_schema, '.', table_name) as full_table_name from information_schema.tables where table_schema != 'pg_catalog' and table_schema != 'information_schema';`  
+`SELECT string_agg(table_name::text, ', ') FROM information_schema.tables WHERE table_schema = 'store';`
 
 ###
 #<< CentOS7 >>
@@ -1522,7 +1553,8 @@ sudo systemctl enable postgresql
 sudo -i -u postgres (or sudo -u postgres psql)
 psql -h localhost -U username database
 ###
-$ sudo nano /var/lib/pgsql/10/data/pg_hba.conf
+`sudo vim /var/lib/pgsql/10/data/pg_hba.conf`  
+```
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
 
 # "local" is for Unix domain socket connections only
@@ -1531,9 +1563,12 @@ local   all             all                                     trust
 host    all             all             127.0.0.1/32            md5
 # IPv6 local connections:
 host    all             all             ::1/128                 md5
+```
 ###
+```
 CREATE ROLE redmine LOGIN ENCRYPTED PASSWORD 'my_secret' NOINHERIT VALID UNTIL 'infinity';
 CREATE DATABASE redmine WITH ENCODING='UTF8' OWNER=redmine;
+```
 ###
 
 
@@ -1582,7 +1617,7 @@ restore database DBNAME with recovery;
 
 
 
-HP Procurve
+# HP Procurve
 ****for logging to console****
 debug destination session
 debug events
@@ -1593,21 +1628,7 @@ copy running-config tftp 10.1.14.38 gln-8206-sw-1_20170913.conf
 
 
 
-
-
-PostgreSQL
-initdb
-vim /var/lib/pgsql/9.4/data/pg_hba.conf
-#host all all 0.0.0.0/0 trusted
-psql
-create user filebank password 'MySomeSuperPass';
-***change password***
-ALTER USER "user_name" WITH PASSWORD 'new_password';
-******
-
-
-
-
+# iperf
 iperf -c 10.0.5.132 -i 1 -P 1 -w 1200
 
 
@@ -1925,7 +1946,21 @@ curl -L -b headers http://localhost/
 ``curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://hostname/resource``  
 - with XML:  
 ``curl -H "Accept: application/xml" -H "Content-Type: application/xml" -X GET http://hostname/resource``  
-
+### timing details aka latency measuring
+```
+echo "time_namelookup: %{time_namelookup}
+time_connect: %{time_connect}
+time_appconnect: %{time_appconnect}
+time_pretransfer: %{time_pretransfer}
+time_redirect: %{time_redirect}
+time_starttransfer: %{time_starttransfer}
+———
+time_total: %{time_total}" > curl-format.txt
+curl -w "@curl-format.txt" -o /dev/null -s http://wordpress.com/
+```
+same per one line  
+``curl -X POST -d @file server:port -w %{time_connect}:%{time_starttransfer}:%{time_total}``  
+more detail look here https://blog.josephscott.org/2011/10/14/timing-details-with-curl/  
 
 grep 
 whithout comments and blank lines
