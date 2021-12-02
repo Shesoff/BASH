@@ -959,6 +959,10 @@ cwd is: F:\design\designer/
 Бизнес процессы
 Alfresco задачи, цели
 
+
+# Performance web monitoring
+TTFB = RTT +    
+
 # NGINX #
 https://www.nginx.com/blog/regular-expression-tester-nginx/  
 self signed самоподписанный сертификат  
@@ -1381,6 +1385,22 @@ http://www.opennet.ru/openforum/vsluhforumID12/7201.html - DROPbox + squid
 
 make distclean - сброс (перед повторной конфигурацией)
 
+# Commons database's info
+## Replication
+*Synchronous* replication - process in that main DB (aka main/master/primary/publisher) will propogate changes to all standby nodes and receives a confirmation before the transaction is committed or marked as completed.  
+*Asynchronous* replication, when the main node receives a transaction, it goes ahead to commit the transaction before propagating that change to standby nodes. This means that there will always be a lag between the main node and standbys.  
+*Physical* replication - binary replication process that propogate all changes (include system's changes) to slave DBs.  
+*Logical* replication - replication process that copy only data to slave DBs. That type preferred when moving between database versions, even if it is slightly more complicated to set up when compared to physical replication.  
+
+
+
+# Key:value
+# ETCD
+* list all keys
+  `ETCDCTL_API=2 etcdctl ls --recursive`  
+  `ETCDCTL_API=2 etcdctl get /service/p-layer/config`
+
+
 # PostgreSQL
 ### Install
 Official install guide [here](https://www.postgresql.org/download/linux/)  
@@ -1391,6 +1411,9 @@ sudo /usr/pgsql-13/bin/postgresql-13-setup initdb
 sudo systemctl enable postgresql-13
 sudo systemctl start postgresql-13
 ```
+## Replication  
+*Streaming* replication - use WAL records which stream changes to the standbys in binary format as it is generated instead of waiting for the WAL file to be filled. Replicates only entire database. For congigure use *pg_basebackup*.  
+*Logical* repllication - is achieved by the construction of a stream of logical data modifications from the WAL file (publication). Can use multi-directional data flow (one Publication many Subscriptors) and can copy individual tables instead of an entire database.   
 ## Performance tuning
 _shared_buffers_ - inmemory buffer, set 25% from all RAM. In some case you can set 70% if all your DB fits inmemory.   
 _work_mem_ - used for complex sorting. System will allocate work_mem * total sort operations for all users. If some operation need more memory then set in work_mem, than Postgres will create temporary file in *pgsql_tmp* directory. Look at *pgsql_tmp* in pick hours and make disisions, increas or not this parameter.   
@@ -1488,7 +1511,7 @@ select pg_size_pretty(pg_database_size('db_name'));
 pg_table_size();
 pg_indexes_size()
 pg_total_relation_size()
-# for postgrespro
+### for postgrespro
 /opt/pgpro/std-10/bin/pg_dump dbname > outfile
 pg_dump -h 172.16.1.15 -U username -W dbname > outfile
 
@@ -1503,7 +1526,7 @@ https://pgbackrest.org/release.html
 `pg_dump -Fp --schema-only --no-publications --no-subscription  -d new_warehouse_db > new_warehouse_db_dump.sql`
 ### dump of roles дамп ролей
 `pg_dumpall --roles-only  -d new_warehouse_db > new_warehouse_db_roles.sql`
-## restore
+### restore
 ```
 psql -U db_user db_name < dump_name.sql
 pg_restore -d db_name /path/to/your/file/dump_name.tar -c -U db_user  
@@ -1948,14 +1971,24 @@ curl -L -b headers http://localhost/
 ``curl -H "Accept: application/xml" -H "Content-Type: application/xml" -X GET http://hostname/resource``  
 ### timing details aka latency measuring
 ```
-echo "time_namelookup: %{time_namelookup}
-time_connect: %{time_connect}
-time_appconnect: %{time_appconnect}
-time_pretransfer: %{time_pretransfer}
-time_redirect: %{time_redirect}
-time_starttransfer: %{time_starttransfer}
-———
-time_total: %{time_total}" > curl-format.txt
+echo "time_namelookup: %{time_namelookup}\n
+time_connect: %{time_connect}\n
+time_appconnect: %{time_appconnect}\n
+time_pretransfer: %{time_pretransfer}\n
+time_redirect: %{time_redirect}\n
+time_starttransfer: %{time_starttransfer}\n
+———\n
+time_total: %{time_total}\n
+\n
+ADDITIONAL INFORMATION\n
+http_version: %{http_version}\n
+num_connects: %{num_connects}\n
+size_download: %{size_download}\n
+size_header: %{size_header}\n
+size_request: %{size_request}\n
+size_upload: %{size_upload}\n
+speed_download: %{speed_download}\n
+speed_upload: %{speed_upload}\n" > curl-format.txt
 curl -w "@curl-format.txt" -o /dev/null -s http://wordpress.com/
 ```
 same per one line  
@@ -2402,10 +2435,16 @@ for pid in `pidof nginx`; do echo "$(< /proc/$pid/cmdline)"; egrep 'files|Limit'
 ```
 
 # Redis
-### connect to redis 
+### connect to redis
 ``redis-cli -p 6903 -a your_secret_pass``  
 ### memory info
 ``info memory``  
+### get all keys
+``redis-cli --scan``
+### get key's value
+``MGET``
+### delete/remove key:value
+``DEL keyname``  
 ### Redis: OOM command not allowed when used memory > ‘maxmemory
 https://ma.ttias.be/redis-oom-command-not-allowed-used-memory-maxmemory/  
 
