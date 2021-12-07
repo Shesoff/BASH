@@ -1526,6 +1526,8 @@ https://pgbackrest.org/release.html
 `pg_dump -Fp --schema-only --no-publications --no-subscription  -d new_warehouse_db > new_warehouse_db_dump.sql`
 ### dump of roles дамп ролей
 `pg_dumpall --roles-only  -d new_warehouse_db > new_warehouse_db_roles.sql`
+### dump certain table
+`pg_dump -h localhost -p 5432 -p pg_username -d pg_db_name -t schema.table > table_dump.sql`
 ### restore
 ```
 psql -U db_user db_name < dump_name.sql
@@ -2112,11 +2114,20 @@ cd /etc/openvpn/easy-rsa/
 #
 `sed -i s/^SELINUX=.*$/SELINUX=permissive/ /etc/selinux/config`  
 `sed -i --regexp-extended 's@.*/([0-9]{8})/@\1@'`
-# recursively
+- recursively  
+```
 find /home/www/ -type f -exec \
     sed -i 's/subdomainA\.example\.com/subdomainB.example.com/g' {} +
 echo "James Bond" | sed -E 's/(.*) (.*)/The name is \2, \1 \2./'
-sed -i.bak  's/\.sh\s\-c\s\$2\s\-b\s\$3\R$/\1 bmanagement/g' launch.sh
+```
+`sed -i.bak  's/\.sh\s\-c\s\$2\s\-b\s\$3\R$/\1 bmanagement/g' launch.sh`  
+### remove range of lines from file
+`sed -i 10,20d dump.sql`  
+will remove range from 10 to 20 (include) rows from dump.sql file  
+  
+  
+remove tail rows from file
+`head -n -10 process_goods_result.sql > process_goods_result_edit.sql`
 
 # 
 # AWK
@@ -2440,7 +2451,7 @@ for pid in `pidof nginx`; do echo "$(< /proc/$pid/cmdline)"; egrep 'files|Limit'
 ### memory info
 ``info memory``  
 ### get all keys
-``redis-cli --scan``
+``reids-cli --scan``
 ### get key's value
 ``MGET``
 ### delete/remove key:value
