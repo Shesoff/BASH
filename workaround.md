@@ -312,20 +312,20 @@ proxy
 
 
 
-***MySQL***
-#Backup#
-mysqldump -u [uname] -p[pass] [dbname] | gzip -9 > [backupfile.sql.gz]
-#or#
-mysqldump -u $USER -p$PASSWORD --default-character-set=$CHARSET $DATABASE -c
-#Restore#
-mysql -u [uname] -p[pass] [db_to_restore] < [backupfile.sql]
-#Create user and grant privileges#
+# MySQL
+### Backup
+`mysqldump -u [uname] -p[pass] [dbname] | gzip -9 > [backupfile.sql.gz]`  
+`mysqldump -u $USER -p$PASSWORD --default-character-set=$CHARSET $DATABASE -c`  
+### Restore
+'mysql -u [uname] -p[pass] [db_to_restore] < [backupfile.sql]'  
+* Create user and grant privileges
+```
 grant all privileges on wiki.* to 'wikiuser'@'localhost' identified by 'PASSWORD';
 flush privileges;
 set password for 'username'@'%' = password('SomeSecretPass');
-
-grant for admin user
-GRANT ALL PRIVILEGES ON *.* TO ‘peter’@’%’;
+```
+* grant for admin user
+`GRANT ALL PRIVILEGES ON *.* TO ‘peter’@’%’;`
 
 #Soft#
 MySQL Workbench
@@ -2290,35 +2290,38 @@ for user in $(cut -f1 -d: /etc/passwd); do crontab -u $user -l; done
 
 
 # OpenShift
-### install oc client 
+* install oc client  
 `yum install openshift-clients`
-# кто я 
-oc whoami
-### Все кластера где я зарегистрирован
-oc config get-clusters
-### показать все контексты (сущность = кластер + логин)
-oc config get-contexts
+* show my login
+`oc whoami`
+* Show my registry clusters  
+`oc config get-clusters`
+* Show all contexts (clusters where I registered)  
+`oc config get-contexts`
 ### переименовать текущий контекст
 oc config rename-context $(oc config current-context) NEW_NAME_CONTEXT
-### сменить контекст 
-oc config use-context context_name
-### list all projects
-oc projects
-### change project
-oc project PROJECT_NAME
-### list all deployments
-oc get deployments
-### get status or erorrs (may use | grep message )
-oc get deployment DEPLOY_NAME -o yaml
-### get info error logs events pod
-oc describe pod <pod-id>
-### get debug errors & evens
-oc debug statefulset/<stateful_name>
-### запуск пода run pod
-oc run db-test-postgresql-client --rm --tty -i --restart='Never' --namespace layer --image docker.io/bitnami/postgresql:11.11.0-debian-10-r62 --limits="cpu=200m,memory=0.2Gi" --env="P
-ASSWORD=$POSTGRES_PASSWORD" --command -- psql --host db-test-postgresql -U postgres -d lumiere_cinema_db -p 5432
-### delete all evicted pods
+* Change context   
+`oc config use-context context_name`
+* list all projects
+`oc projects`
+* change project
+`oc project PROJECT_NAME`
+* list all deployments
+`oc get deployments`
+* get status or erorrs (may use | grep message )
+`oc get deployment DEPLOY_NAME -o yaml`
+* get info error logs events pod
+`oc describe pod <pod-id>`
+* get debug errors & evens
+`oc debug statefulset/<stateful_name>`
+* запуск пода run pod
+`oc run db-test-postgresql-client --rm --tty -i --restart='Never' --namespace layer --image docker.io/bitnami/postgresql:11.11.0-debian-10-r62 --limits="cpu=200m,memory=0.2Gi" --env="PASSWORD=$POSTGRES_PASSWORD" --command -- psql --host db-test-postgresql -U postgres -d lumiere_cinema_db -p 5432`
+* delete all evicted pods
 ``oc get pods | grep Evicted | awk '{print $1}' | xargs oc delete pod``  
+* delete all failed pods
+`oc delete pod  --field-selector=status.phase=Failed`
+* Filter status pods
+`oc get pods | grep CrashLoopBackOff | awk '{print $1}'`
 
 
 ## Heml
