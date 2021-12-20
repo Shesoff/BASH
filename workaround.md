@@ -1507,10 +1507,23 @@ GRANT
 ### Other
 pg_config - показывает ключи с которыми PostgreSQL был собран
 select pg_database_size('db_name'); - занимаемый разбер в байтах
-select pg_size_pretty(pg_database_size('db_name'));
-pg_table_size();
-pg_indexes_size()
-pg_total_relation_size()
+`select pg_size_pretty(pg_database_size('db_name'));`  
+`SELECT pg_size_pretty (pg_total_relation_size ('schema_name.table_name'));`  
+pg_table_size();  
+pg_indexes_size()  
+pg_total_relation_size()  
+Топ самых больших таблиц в базе:  
+```
+SELECT nspname || '.' || relname AS "relation",
+    pg_size_pretty(pg_total_relation_size(C.oid)) AS "total_size"
+  FROM pg_class C
+  LEFT JOIN pg_namespace N ON (N.oid = C.relnamespace)
+  WHERE nspname NOT IN ('pg_catalog', 'information_schema')
+    AND C.relkind <> 'i'
+    AND nspname !~ '^pg_toast'
+  ORDER BY pg_total_relation_size(C.oid) DESC
+  LIMIT 5;
+```
 ### for postgrespro
 /opt/pgpro/std-10/bin/pg_dump dbname > outfile
 pg_dump -h 172.16.1.15 -U username -W dbname > outfile
@@ -1771,7 +1784,8 @@ CMD ["/main"]
 ### docker run example
 docker run -d -p 9001:9001 --name syslog -v /var/log:/log mthenw/frontail -U sysadmin -P 12345678 -n 5000 /log/messages
 
-
+# Docker Swarm
+`docker node update p-b2b-swarm-sc-msk01 --availability drain`
 
 # raid
 ## hpacucli  
@@ -2319,7 +2333,7 @@ oc config rename-context $(oc config current-context) NEW_NAME_CONTEXT
 * delete all evicted pods
 ``oc get pods | grep Evicted | awk '{print $1}' | xargs oc delete pod``  
 * delete all failed pods
-`oc delete pod  --field-selector=status.phase=Failed`
+`oc delete pod --field-selector=status.phase=Failed`
 * Filter status pods
 `oc get pods | grep CrashLoopBackOff | awk '{print $1}'`
 
@@ -2391,6 +2405,8 @@ My any text body
 </html>
 EOF
 ```
+## Network scan
+`echo > /dev/tcp/172.16.0.12/5043 && echo "Open"`
 
 ~/.bash_profile - user mode (when login console or ssh)  
 ~/.bashrc - interactive mode (when run bash command or run bash script)  
