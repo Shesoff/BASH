@@ -1004,8 +1004,6 @@ root /srv/www/maint;
 }
 ```
 ### locations proxy-pass
-location должен заканчиваться /  
-- вот с хуя ли?      
 - если proxy-pass без URI то location передается как есть на proxy-pass  
 - если proxy-pass c URI, то нормализованны URI из location меняется на URI из proxy-pass 
 подробнее тут https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass  
