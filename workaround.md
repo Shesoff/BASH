@@ -1501,6 +1501,11 @@ GRANT
 target_database=# GRANT SELECT ON ALL TABLES IN SCHEMA public TO readonly ;
 GRANT
 ```
+  default privileges inheritance  
+```
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+   GRANT SELECT ON TABLES TO 'username';
+```
 
 ### Other
 pg_config - показывает ключи с которыми PostgreSQL был собран
