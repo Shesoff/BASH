@@ -2340,6 +2340,8 @@ oc config rename-context $(oc config current-context) NEW_NAME_CONTEXT
 * Filter status pods
 `oc get pods | grep CrashLoopBackOff | awk '{print $1}'`
 
+kubectl port-forward service/showcase-api 8080:8080  
+
 
 ## Heml
 ### Notes
@@ -2412,7 +2414,7 @@ EOF
 `echo > /dev/tcp/172.16.0.12/5043 && echo "Open"`
 
 ~/.bash_profile - user mode (when login console or ssh)  
-~/.bashrc - interactive mode (when run bash command or run bash script)  
+~/.bashrc - interactive mode non-login (when run bash command or run bash script)  
 ### Adding directory to the PATH 
 ``PATH=$PATH:$HOME/bin:/usr/local/bin``  
 ``export PATH``  
