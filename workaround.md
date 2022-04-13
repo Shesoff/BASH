@@ -273,10 +273,10 @@ ssh-keygen -f pub1key.pub -i >> ~/.ssh/authorized_keys
 `openssl pkcs7 -print_certs -in certificate.p7b -out certificate.ceropenssl pkcs12 -export -in certificate.cer -inkey privateKey.key -out certificate.pfx -certfile CACert.cer`
 ### Convert PFX to PEM
 `openssl pkcs12 -in certificate.pfx -out certificate.cer -nodes`
-####
+###
 OpenSSL is expecting the RSA key to be in PKCS#1 format
 `ssh-keygen -f key.pub -e -m pem`
-#### verify certificate:
+### verify certificate:
 openssl s_client -showcerts -connect spdcvc.geolife.lan:636
 **************************************************************
 1. generate key:
@@ -293,6 +293,11 @@ openssl req -new -key private.key -out domain-name.csr
 2. generate crt:
 openssl req -new -x509 -days 365 -nodes -out smtpd.cert -keyout smtpd.key
 **************************************************************
+### Get certificate from server
+`openssl s_client -showcerts -servername www.example.com -connect www.example.com:443 </dev/null`
+### Get fingerprint of certificate
+`openssl s_client -connect www.example.com:443 < /dev/null 2>/dev/null | openssl x509 -fingerprint -sha256 -noout -in /dev/stdin`  
+
 
 
 # MySQL
