@@ -88,7 +88,7 @@ tar -zxvf prog-1-jan-2005.tar.gz -C /tmp
 **************************************************
 tar with permissions
 tar pzcvf tarball.tgz
-tar pxvf tarball.tgz		untar need with p
+tar pxvf tarball.tgz		untar need with permissions
 Empty (clear) text type file:
 cat /dev/null > /path/to/file.txt
 **************************************************
@@ -240,7 +240,7 @@ Ports firewall
 
 
 **************************************************************
-**********************SSL TLS Certificate*********************
+# SSL TLS Certificate
 **************************************************************
 ФОРМАТ СЕРТИФИКАТА PEM
 PEM – наиболее популярный формат среди сертификационных центров. PEM сертификаты могут иметь расширение .pem, .crt, .cer, и .key (файл приватного ключа). Она представляют собой ASCII файлы, закодированные по схеме Base64. Когда вы открываете файл pem формата в текстовом редакторе, вы можете увидеть, что текст кода в нем начинается с тега «—— BEGIN CERTIFICATE ——» и заканчивая тегом «—— END CERTIFICATE ——«.
@@ -261,25 +261,22 @@ PFX СЕРТИФИКАТ (ФОРМАТ PKCS # 12)
 
 
 ssh-keygen -f pub1key.pub -i >> ~/.ssh/authorized_keys
-Конвертировать PEM в DER
-openssl x509 -outform der -in certificate.pem -out certificate.der
-Конвертировать PEM в P7B
-openssl crl2pkcs7 -nocrl -certfile certificate.cer -out certificate.p7b -certfile CACert.cer
-Конвертировать PEM в PFX
-openssl pkcs12 -export -out certificate.pfx -inkey privateKey.key -in certificate.crt -certfile CACert.crt
-Конвертировать DER в PEM
-openssl x509 -inform der -in certificate.cer -out certificate.pem
-Конвертировать P7B в PEM
-openssl pkcs7 -print_certs -in certificate.p7b -out certificate.cer
-Конвертировать P7B в PFX
-openssl pkcs7 -print_certs -in certificate.p7b -out certificate.ceropenssl pkcs12 -export -in certificate.cer -inkey privateKey.key -out certificate.pfx -certfile CACert.cer
-Конвертировать PFX в PEM
-openssl pkcs12 -in certificate.pfx -out certificate.cer -nodes
+### Convert PEM to DER
+`openssl x509 -outform der -in certificate.pem -out certificate.der`
+### Convert PEM to PFX
+`openssl pkcs12 -export -out certificate.pfx -inkey privateKey.key -in certificate.crt -certfile CACert.crt`
+### Convert DER to PEM
+`openssl x509 -inform der -in certificate.cer -out certificate.pem`
+### Convert P7B to PEM
+`openssl pkcs7 -print_certs -in certificate.p7b -out certificate.cer`
+### Convert P7B to PFX
+`openssl pkcs7 -print_certs -in certificate.p7b -out certificate.ceropenssl pkcs12 -export -in certificate.cer -inkey privateKey.key -out certificate.pfx -certfile CACert.cer`
+### Convert PFX to PEM
+`openssl pkcs12 -in certificate.pfx -out certificate.cer -nodes`
 ####
 OpenSSL is expecting the RSA key to be in PKCS#1 format
-ssh-keygen -f key.pub -e -m pem
-####
-verify certificate:
+`ssh-keygen -f key.pub -e -m pem`
+#### verify certificate:
 openssl s_client -showcerts -connect spdcvc.geolife.lan:636
 **************************************************************
 1. generate key:
@@ -296,20 +293,6 @@ openssl req -new -key private.key -out domain-name.csr
 2. generate crt:
 openssl req -new -x509 -days 365 -nodes -out smtpd.cert -keyout smtpd.key
 **************************************************************
-
-total commander
-create shortcut = Ctrl+Shift+F5
-
-Spam
-EmailSender
-
-OneOrZero HelpDesk - servicedesk
-
-proxy
-172.22.1.206:3128
-
-
-
 
 
 # MySQL
@@ -868,12 +851,16 @@ Number of key(s) added: 1
 #Now try logging into the machine, with:   "ssh 'user@hostOrIp'"
 #and check to make sure that only the key(s) you wanted were added.
 ---
-SOCKS proxy
-emulation in SSH client
-ssh -D 5555 user@remotehost -f -N
-, где -D 5555 - эмуляция SOCKS сервера через порт 5555 
--f  - работа в фоне, после аутентификации
--N - не запускать shell на удаленном хосте.
+#### SOCKS proxy  
+emulation in SSH client  
+`ssh -D 5555 user@remotehost -f -N` где -D 5555 - эмуляция SOCKS сервера через порт 5555  
+-f  - работа в фоне, после аутентификации  
+-N - не запускать shell на удаленном хосте.  
+## SSH Tunneling
+https://www.ssh.com/academy/ssh/tunneling/example  
+#### Local Forwardig 
+`ssh -L 80:intra.example.com:80 gw.example.com` - curl http://localhost:80 - will return answer from intra.example.com:80 
+
 ***********
 multiline commands over ssh
 ssh root@${mod_ib_01} "(
@@ -973,6 +960,15 @@ location <modifier> <prefix> {
 ...
 }
 ```
+### Modules 
+```
+make modules
+mkdir /nginx_module/
+cp objs/ngx_http_vhost_traffic_status_module.so /nginx_module/
+```
+разнести по балансерам в /etc/nginx/modules
+`chown root. ngx_http_vhost_traffic_status_module.so`  
+For more look at this https://sysadmin.pm/nginx-build-module-sh/ and here https://habr.com/ru/company/tinkoff/blog/452336/
 ## HTTPS TLS
 https://ssl-config.mozilla.org/  
 https://gist.github.com/paskal/628882bee1948ef126dd  
@@ -1394,9 +1390,11 @@ make distclean - сброс (перед повторной конфигурац�
 
 # Key:value
 # ETCD
-* list all keys
+* list all keys  
   `ETCDCTL_API=2 etcdctl ls --recursive`  
-  `ETCDCTL_API=2 etcdctl get /service/p-layer/config`
+  `ETCDCTL_API=2 etcdctl get /service/p-layer/config`  
+* list all members  
+`etcdctl member list`  
 
 
 # PostgreSQL
@@ -1573,13 +1571,13 @@ alter subscription mc_process_db1 refresh publication ;
 \dRp+ publication_name  
 select * from pg_stat_replication ;  
 
-## Show
-### show all schemas
-`\dn`  
-### show all tables in schema
-`\dt schema_name.*`
-### show table structure
-`\d table_name`
+## psql tips and triks
+`\l` - list all databases  
+`\c` - connect to database  
+`\df` - display functions (procedures) in database  
+`\dn` - show all schemas  
+`\dt schema_name.*` - show all tables in schema  
+`\d table_name` - show table structure
 
 ### Select examples
 `select concat (table_schema, '.', table_name) as full_table_name from information_schema.tables where table_schema != 'pg_catalog' and table_schema != 'information_schema';`  
@@ -2473,7 +2471,7 @@ for pid in `pidof nginx`; do echo "$(< /proc/$pid/cmdline)"; egrep 'files|Limit'
 ### connect to redis
 ``redis-cli -p 6903 -a your_secret_pass``  
 ### memory info
-``info memory``  
+``info memory``      
 ### get all keys
 ``reids-cli --scan``
 ### get key's value
