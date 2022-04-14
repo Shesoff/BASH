@@ -2187,7 +2187,8 @@ mvn clean install -Dmaven.test.skip=true
 # не сохраняет либы
 mvn clean package
 
-.npmrc
+# NPM
+## .npmrc
 progress=false
 email=jenkins@somedomain.ru
 _auth=PaSSw0rD
@@ -2214,14 +2215,13 @@ pdpl-user -i 63 USERNAME
 
 
 
-#BASH
+# BASH
 $0 - имя скрипта
 $1 - firs argument, $2 - second etc.
 $# - count arguments
 $@ - all arguments is delimited spaces
 $& - статус выполнения последней команды
-Diaog диалог
-###
+
 ```
 #!/bin/bash
 
@@ -2238,7 +2238,7 @@ case "$item" in
         ;;
 esac
 ```  
-#### именованные аргументы named arguments
+### именованные аргументы named arguments
 ```
 RESTORE=0
 ENCRYPT=1
@@ -2422,6 +2422,67 @@ EOF
 ``PATH=$PATH:$HOME/bin:/usr/local/bin``  
 ``export PATH``  
 
+# Ingress Nginx
+### IP Whitelist for location
+https://stackoverflow.com/questions/58925853/kubernetes-ingress-whitelist-ip-for-path  
+```
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: frontend-admin
+  namespace: default
+  labels:
+    app: frontend
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/16"
+spec:
+  tls:
+    - hosts:
+        - frontend.example.com
+      secretName: frontend-tls
+  rules:
+    - host: frontend.example.com
+      http:
+        paths:
+          - path: /admin
+            backend:
+              serviceName: api
+              servicePort: 8000
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: frontend-all
+  namespace: default
+  labels:
+    app: frontend
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - hosts:
+        - frontend.example.com
+      secretName: frontend-tls
+  rules:
+    - host: frontend.example.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: frontend
+              servicePort: 80
+          - path: /api
+            backend:
+              serviceName: api
+              servicePort: 8000
+          - path: /staticfiles
+            backend:
+              serviceName: api
+              servicePort: 80
+```
 
 
 
