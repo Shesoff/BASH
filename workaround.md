@@ -241,13 +241,14 @@ Ports firewall
 
 **************************************************************
 # SSL TLS Certificate
-**************************************************************
-ФОРМАТ СЕРТИФИКАТА PEM
-PEM – наиболее популярный формат среди сертификационных центров. PEM сертификаты могут иметь расширение .pem, .crt, .cer, и .key (файл приватного ключа). Она представляют собой ASCII файлы, закодированные по схеме Base64. Когда вы открываете файл pem формата в текстовом редакторе, вы можете увидеть, что текст кода в нем начинается с тега «—— BEGIN CERTIFICATE ——» и заканчивая тегом «—— END CERTIFICATE ——«.
+**************************************************************  
+https://superuser.com/questions/1535116/generating-privatepublic-keypair-for-ssh-difference-between-ssh-keygen-and-ope  
 
+### PEM (PKCS#1)
+PEM – наиболее популярный формат среди сертификационных центров. PEM сертификаты могут иметь расширение .pem, .crt, .cer, и .key (файл приватного ключа). Она представляют собой ASCII файлы, закодированные по схеме Base64. Когда вы открываете файл pem формата в текстовом редакторе, вы можете увидеть, что текст кода в нем начинается с тега ``-----BEGIN RSA PRIVATE KEY-----`` и заканчивая тегом ``-----END CERTIFICATE-----``.  "PKCS#1" or "PEM" key format, which is Base64 encoding of an ASN.1 DER serialized structure. It's a basic ASN.1 sequence containing the RSA parameters (n, e, d, p, q, etc).  
 Apache и другие подобные серверы используют сертификаты в PEM формате. Обратите внимание, что в одном файле может содержатся несколько SSL сертификатов и даже приватный ключ, один под другим. В таком случае каждый сертификат отделен от остальных ранее указанными тегами BEGIN и END. Как правило, для установки SSL сертификата на Apache, сертификаты и приватный ключ должны быть в разных файлах.
 
-ФОРМАТ СЕРТИФИКАТА DER
+### DER
 DER формат – это бинарный тип сертификата вместо формата PEM. В PEM формате чаще всего используется расширение файла .cer, но иногда можно встретить и расширение файла .der. Поэтому чтобы отличить SSL сертификат в формате PEM от формата DER, следует открыть его в текстовом редакторе и найти теги начала и окончания сертификата (BEGIN/END). DER SSL сертификаты, как правило, используются на платформах Java.
 
 PKCS # 7 / P7B СЕРТИФИКАТ
@@ -428,6 +429,10 @@ munin - alternate cacti
 `sar -n DEV 1 3`  
 `nload`  
 `iftop`  
+## Prometheus
+### Get top time series metrics
+`topk(20, count by (__name__, job)({__name__=~".+"}))`  
+
 ----------------
 
 Roundcube
@@ -1027,6 +1032,13 @@ location ^~ /test
 3. ~ и ~* regexp. ~ регистрозависимый, ~* регистронезависимый  
 4. / prefix (longest prefix match)  
 location ~*\.php$ - знак $ означает конец строки
+## Nginx stippets
+#### Deny all attempts to access hidden files such as .htaccess or .htpasswd
+```
+location ~ /\. {
+    deny all;
+}
+```
 
 
 ### rewrite_mod
@@ -1049,6 +1061,7 @@ location /swagger/ {
 }
 
 ### Order processing.
+```
 typedef enum {
      NGX_HTTP_POST_READ_PHASE = 0,
      NGX_HTTP_SERVER_REWRITE_PHASE,
@@ -1062,8 +1075,7 @@ typedef enum {
      NGX_HTTP_CONTENT_PHASE,
      NGX_HTTP_LOG_PHASE
 } ngx_http_phases;
-
-
+```
 
 # wi-fi wifi
 ### unifi ap pro
@@ -1455,9 +1467,11 @@ WHERE
     -- don't kill my own connection!
     pid <> pg_backend_pid()
     -- don't kill the connections to other databases
-    AND datname = 'lumiere_cinema_db'
+    AND datname = 'prod_layer_db'
     ;
 ```
+#### Copy to file
+`\copy (select * from pg_stat_activity) to /tmp/pg_stat_activity.csv csv;`  
 ### Grant privileges 
 On all schemas
 ```
@@ -1963,10 +1977,13 @@ cd /path/to/folder_with_huge_number_of_files1
 ls -f | wc -l
 
 #############################
-#ELK Elastic Logstash Kibana#
+# ELK Elastic Logstash Kibana#
+https://gist.github.com/ruanbekker/e8a09604b14f37e8d2f743a87b930f93 cheatsheet-elasticsearch.md
 #|||||||||||||||||||||||||||#
 Kibana version
 curl -XGET 'http://localhost:9200'
+### Cluster status
+curl -u username:password -k -i https://p-mm-elasticsearch-master-1:9200/_cluster/health?pretty
 
 
 # curl
@@ -2573,3 +2590,17 @@ strace -f -e trace=file tmux
 # Data fromat
 ### Linux
 `cp ./running_app/ app_bkp_$(date +'%Y%m%d')`
+
+# Mattermost
+## API examples
+### Login
+`curl -i -d '{"login_id":"someone@nowhere.com","password":"thisisabadpassword"}' https://myserver.company.com/api/v4/users/login`
+### Get teams
+`curl -S -H 'Authorization: Bearer tokenTokenToken' https://myserver.company.com/api/v4/teams | jq`
+### Get user by email
+`curl -sS -H 'Authorization: Bearer tokenTokenToken' https://myserver.company.com/api/v4/users/email/username@company.com | jq`
+#### Which channel user is
+```
+userid=`curl -sS -H 'Authorization: Bearer tokenTokenToken' https://myserver.company.com/api/v4/users/email/username@company.com | jq -r '.id'`
+curl -sS -H 'Authorization: Bearer tokenTokenToken' https://myserver.company.com/api/v4/users/$userid/teams/8yfs9fjym7dwudxh3g6z4znefo/channels | jq '.[].display_name'
+```
