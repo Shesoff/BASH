@@ -16,6 +16,8 @@ ln -s /usr/local/Cellar/libpq/10.3/bin/psql /usr/local/bin/psql
 
 
 # Linux || Unix
+## Namespace
+It's abstraction on OS's resources. Namespace has 7 types: Cgroups, IPC, Network, Mount, PID, User, UTS.
 ## Change default visual & editor
 ```
 export VISUAL=nano
@@ -1264,29 +1266,30 @@ ORACLE_HOME=/opt/oracle/product/18c/dbhomeXE
 
 https://etogeek.ru/linux-partition-resize/
 # LVM 
-lvcreate -n NAME -l 100%FREE vg0
 
 ## Linux LVM extend disk vmware
 Power off the virtual machine.
 Edit the virtual machine settings and extend the virtual disk size. For more information, see Increasing the size of a virtual disk (1004047).
 Power on the virtual machine.
 Identify the device name, which is by default /dev/sda, and confirm the new size by running the command:
-# fdisk -l
-Create a new primary partition
+`fdisk -l`  
+### Create a new primary partition  
 Restart the virtual machine.
 Run this command to verify that the changes were saved to the partition table and that the new partition has an 8e type:
-# fdisk -l
-Run this command to convert the new partition to a physical volume:
+`fdisk -l`  
+Run this command to convert the new partition to a physical volume:  
 Note: The number for the sda can change depending on system setup. Use the sda number that was created in step 5.
-# pvcreate /dev/sda3
+`pvcreate /dev/sda3`
 Run this command to extend the physical volume:
-# vgextend VolGroup00 /dev/sda3
+`vgextend VolGroup00 /dev/sda3`
 Note: To determine which volume group to extend, use the command vgdisplay.
-Run this command to verify how many physical extents are available to the Volume Group:
-# vgdisplay VolGroup00 | grep "Free"
-Run the following command to extend the Logical Volume:
-# lvextend -L+#G /dev/VolGroup00/LogVol00
-# lvextend -l +100%FREE /dev/volgroup/logvol
+Run this command to verify how many physical extents are available to the Volume Group:  
+`vgdisplay VolGroup00 | grep "Free"`  
+create logical volume:  
+`lvcreate -n NAME -l 100%FREE vg0`
+Run the following command to extend the Logical Volume:  
+`lvextend -L+#G /dev/VolGroup00/LogVol00`  
+`lvextend -l +100%FREE /dev/volgroup/logvol`  
 Where # is the number of Free space in GB available as per the previous command. Use the full number output from Step 10 including any decimals.
 Note: To determine which logical volume to extend, use the command lvdisplay.
 Run the following command to expand the ext3 filesystem online, inside of the Logical Volume:
@@ -2149,6 +2152,7 @@ cd /etc/openvpn/easy-rsa/
 #
 # SED
 #
+[Sed one-liners](https://gist.github.com/chunyan/b426e4b696ff3e7b9afb)  
 `sed -i s/^SELINUX=.*$/SELINUX=permissive/ /etc/selinux/config`  
 `sed -i --regexp-extended 's@.*/([0-9]{8})/@\1@'`
 - recursively  
