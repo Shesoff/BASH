@@ -248,18 +248,32 @@ https://superuser.com/questions/1535116/generating-privatepublic-keypair-for-ssh
 
 ### PEM (PKCS#1)
 PEM – наиболее популярный формат среди сертификационных центров. PEM сертификаты могут иметь расширение .pem, .crt, .cer, и .key (файл приватного ключа). Она представляют собой ASCII файлы, закодированные по схеме Base64. Когда вы открываете файл pem формата в текстовом редакторе, вы можете увидеть, что текст кода в нем начинается с тега ``-----BEGIN RSA PRIVATE KEY-----`` и заканчивая тегом ``-----END CERTIFICATE-----``.  "PKCS#1" or "PEM" key format, which is Base64 encoding of an ASN.1 DER serialized structure. It's a basic ASN.1 sequence containing the RSA parameters (n, e, d, p, q, etc).  
-Apache и другие подобные серверы используют сертификаты в PEM формате. Обратите внимание, что в одном файле может содержатся несколько SSL сертификатов и даже приватный ключ, один под другим. В таком случае каждый сертификат отделен от остальных ранее указанными тегами BEGIN и END. Как правило, для установки SSL сертификата на Apache, сертификаты и приватный ключ должны быть в разных файлах.
-
+Apache и другие подобные серверы используют сертификаты в PEM формате. Обратите внимание, что в одном файле может содержатся несколько SSL сертификатов и даже приватный ключ, один под другим. В таком случае каждый сертификат отделен от остальных ранее указанными тегами BEGIN и END. Как правило, для установки SSL сертификата на Apache, сертификаты и приватный ключ должны быть в разных файлах.  
+___
+View contents of PEM certificate file:  
+`openssl x509 -in CERTIFICATE.pem -text -noout`  
+___
+PEM to DER:  
+`openssl x509 -outform der -in CERTIFICATE.pem -out CERTIFICATE.der`  
+____
+PEM to PKCS#7:  
+`openssl crl2pkcs7 -nocrl -certfile CERTIFICATE.pem -certfile MORE.pem -out CERTIFICATE.p7b`  
+Where `MORE.pem` is file with chained intermediate and root certificates.  
+___
 ### DER
-DER формат – это бинарный тип сертификата вместо формата PEM. В PEM формате чаще всего используется расширение файла .cer, но иногда можно встретить и расширение файла .der. Поэтому чтобы отличить SSL сертификат в формате PEM от формата DER, следует открыть его в текстовом редакторе и найти теги начала и окончания сертификата (BEGIN/END). DER SSL сертификаты, как правило, используются на платформах Java.
-
-PKCS # 7 / P7B СЕРТИФИКАТ
+DER формат – это бинарный тип сертификата вместо формата PEM. В PEM формате чаще всего используется расширение файла .cer, но иногда можно встретить и расширение файла .der. Поэтому чтобы отличить SSL сертификат в формате PEM от формата DER, следует открыть его в текстовом редакторе и найти теги начала и окончания сертификата (BEGIN/END). DER SSL сертификаты, как правило, используются на платформах Java.  
+___
+View contents of DER-encoded certificate file:  
+`openssl x509 -inform der -in CERTIFICATE.der -text -noout`  
+___
+DER to PEM:  
+`openssl x509 -inform der -in CERTIFICATE.der -out CERTIFICATE.pem`
+___
+### PKCS # 7 / P7B - is a container format for digital certificates.  
 SSL сертификаты в формате PKCS # 7 или P7B — это файлы, которые хранятся в формате Base64 ASCII и имеют расширение файла .p7b или .p7c. P7B сертификаты содержат теги начала сертификата «—— BEGIN PKCS7 ——» и его конца «—— END PKCS7 ——«. Файлы в формате P7B включают в себя только ваш SSL сертификат и промежуточные SSL сертификаты. Приватный ключ при этом идет отдельным файлом. SSL сертификаты в формате PKCS # 7 / P7B поддерживают следующие платформы: Microsoft Windows и Java Tomcat.
-
-PFX СЕРТИФИКАТ (ФОРМАТ PKCS # 12)
+### PFX СЕРТИФИКАТ (ФОРМАТ PKCS # 12)
 Формат SSL сертификата PKCS # 12 или, как его еще называют, PFX сертификат — бинарный формат, при использовании которого в одном зашифрованном файле хранится не только ваш личный сертификат сервера и промежуточные сертификаты центра сертификации, но и ваш закрытый ключ. PFX файлы, как правило, имеют расширение .pfx или .p12. Обычно, файлы формата PFX используются на Windows серверах для импорта и экспорта файлов SSL сертификатов и вашего приватного ключа.
-
-КОНВЕРТАЦИЯ SSL СЕРТИФИКАТОВ В OPENSSL
+### КОНВЕРТАЦИЯ SSL СЕРТИФИКАТОВ В OPENSSL
 Данные команды OpenSSL дают возможность преобразовать сертификаты и ключи в разные форматы. Для того чтобы сделать их совместимыми с определенными видами серверов, либо ПО. К примеру, Вам необходимо конвертировать обыкновенный файл PEM, который будет работать с Apache, в формат PFX (PKCS # 12) с целью применения его с Tomcat, либо IIS.
 
 
@@ -1833,6 +1847,9 @@ qm importdisk 152 astra-ald-v5-disk001.vmdk local-lvm --format qcow2
 
 
 # Ansible
+By default ansible execute one task on all host but has limit 5 fork = [linner strategy](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/linear_strategy.html#linear-strategy). Ansible has other strategy: debug and free (fast).
+## Execution strategy
+By default 
 ### list all hostvars
 ansible -i inventory pct-tst-tmp-01-centos-1.12.somedomain.local -m debug -a "var=hostvars[inventory_hostname]"
 ### ad-hoc online
@@ -1930,6 +1947,9 @@ ssh://username:QwePassword@192.168.109.201:2221:/path
 
 # BASH bash
 #!/usr/bin/env bash
+
+## bash loop
+for i in {1..4}; do ssh -o loglevel=ERROR username@nginx-srv$i ;done
 
 ### bash example redis bitnami run.sh
 ```
