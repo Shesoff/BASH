@@ -33,7 +33,10 @@ export EDITOR="$VISUAL"
 yum install yum-plugin-downloadonly
 yum install --downloadonly --downloaddir=. <package-name>
 ```
-
+Show alternative versions package  
+`yum list --showduplicate nginx-module-vts.x86_64`  
+Install version package  
+`yum install nginx-module-vts-1.18.0-2.el7.ngx`  
 # Файловые дескрипторы || file's descriptors
 ### кол-во открытых, не точное т.к. попадются строки одних и тех же файлов открытых другими процессами
 lsof | wc -l 
@@ -448,7 +451,8 @@ munin - alternate cacti
 ## Prometheus
 ### Get top time series metrics
 `topk(20, count by (__name__, job)({__name__=~".+"}))`  
-
+## Check config validation
+`promtool check config prometheus.yml`  
 ----------------
 
 Roundcube
@@ -1728,10 +1732,16 @@ Get-Mailbox -ResultSize Unlimited | Where { $_.RoleAssignmentPolicy -like $null}
 1541 - для менеджера кластера;
 1540 - для агента сервера (не обязательно, если центральный сервер кластера один).
 
+```
 (for %i in (*.wav) do @echo file '%i') > mylist.txt
 ffmpeg.exe -f concat -safe 0 -i mylist.txt -c copy output.mp4
 for %%a in ("input\*.*") do ffmpeg -i "%%a" -s hd720 -c:v libx264 -crf 23 -af "volume=30dB" "newfiles\%%~na.mp4"
 pause
+```
+___
+```
+ffmpeg -i "Запись Конференция Jazz 2022-06-23_150034.webm" -c copy output.mp4
+```
 
 
 # OCI
@@ -2257,12 +2267,12 @@ pdpl-user -i 63 USERNAME
 
 
 # BASH
-$0 - имя скрипта
-$1 - firs argument, $2 - second etc.
-$# - count arguments
-$@ - all arguments is delimited spaces
-$& - статус выполнения последней команды
-
+`$0` - имя скрипта  
+`$1` - firs argument, `$2` - second etc.  
+`$#` - count arguments  
+`$@` - all arguments is delimited spaces  
+`$&` - статус выполнения последней команды  
+Пример скрипта с выпобором:  
 ```
 #!/bin/bash
 
@@ -2278,7 +2288,7 @@ case "$item" in
     *) echo "Ничего не ввели. Выполняем действие по умолчанию..."
         ;;
 esac
-```  
+```
 ### именованные аргументы named arguments
 ```
 RESTORE=0
@@ -2312,22 +2322,17 @@ done
 
 date "+%Y%m%d"
 
-Jenkins
-Q. Почему стоит хранить jenkins files в проекте с исходным кодом а не выносить с отдельный?
-A. Потому что в зависимости от релизной ветки бывают разные варинаты сборок, т.о. если jenkins файл лежит в проекте он может отличаться от ветки к ветки, тем самым мы имеем один jenkins job просто выбираем ветку (gitParameter), в противном случае количество jenkins job'ов и jenkins file'ов прямо пропорциональной различным сборкам. 
-
-Jenkins - Nodes - Slave_agent_name - Script Console
-println System.getenv("LANG")
+# Jenkins
+Q. Почему стоит хранить jenkins files в проекте с исходным кодом а не выносить с отдельный?  
+A. Потому что в зависимости от релизной ветки бывают разные варинаты сборок, т.о. если jenkins файл лежит в проекте он может отличаться от ветки к ветки, тем самым мы имеем один jenkins job просто выбираем ветку (gitParameter), в противном случае количество jenkins job'ов и jenkins file'ов прямо пропорциональной различным сборкам.   
+Jenkins - Nodes - Slave_agent_name - Script Console  
+```
+println System.getenv("LANG")  
 println "mvn -version".execute().text
+```
 
-
-
-###МЗИ
-#авторизация аутентификация
-http://10.0.1.151/authenticator/api/internalauth/auth
-
-powershell
-#execution policy
+# Powershell
+### execution policy
 # для текущей terminal сессии:
 Set-ExecutionPolicy Unrestricted -Scope Process
 # like grep
@@ -2351,6 +2356,11 @@ for user in $(cut -f1 -d: /etc/passwd); do crontab -u $user -l; done
 
 
 # OpenShift
+Bash completion on mac  
+```
+oc completion bash > /usr/local/etc/bash_completion.d/oc_bash_completion.sh   
+source /usr/local/etc/bash_completion.d/oc_bash_completion.sh
+```
 * install oc client  
 `yum install openshift-clients`
 * show my login
