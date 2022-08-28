@@ -1291,6 +1291,23 @@ Edit the virtual machine settings and extend the virtual disk size. For more inf
 Power on the virtual machine.
 Identify the device name, which is by default /dev/sda, and confirm the new size by running the command:
 `fdisk -l`  
+### Увеличение размера XFS partition
+```
+echo 1 > /sys/class/block/sdb/device/rescan
+lsblk
+yum install cloud-utils-growpart -y
+growpart /dev/sdb 1
+xfs_growfs -d /dev/sdb1
+```
+### LVM extend
+```
+echo 1 > /sys/class/block/sdb/device/rescan
+lsblk
+yum install cloud-utils-growpart -y
+pvresize  /dev/sdb
+lvextend -l +100%FREE /dev/datassdvg/datassdlv
+xfs_growfs -d /dev/datassdvg/datassdlv
+```
 ### Create a new primary partition  
 Restart the virtual machine.
 Run this command to verify that the changes were saved to the partition table and that the new partition has an 8e type:
@@ -2393,6 +2410,12 @@ oc config rename-context $(oc config current-context) NEW_NAME_CONTEXT
 `oc delete pod --field-selector=status.phase=Failed`
 * Filter status pods
 `oc get pods | grep CrashLoopBackOff | awk '{print $1}'`
+* Create new project
+```
+oc new-project hello-openshift \
+    --description="This is an example project" \
+    --display-name="Hello OpenShift"
+```
 
 kubectl port-forward service/showcase-api 8080:8080  
 
