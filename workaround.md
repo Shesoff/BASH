@@ -10,6 +10,7 @@
 - как посмотреть утилизацию сетевых интерфейсов
 - как спроксировать трафик (tcp or udp) 
 ## MacOS 
+`00~` fix `printf '\e[?2004l'`
 ### install psql
 brew install libpq
 ln -s /usr/local/Cellar/libpq/10.3/bin/psql /usr/local/bin/psql
