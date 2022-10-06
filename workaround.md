@@ -1789,6 +1789,13 @@ _or_
 net.ipv4.ip_forward=1
 sysctl -p 
 ```
+### Network tuning
+```
+net.netfilter.nf_conntrack_sctp_timeout_established=3600
+net.netfilter.nf_conntrack_tcp_timeout_established=3600
+net.netfilter.nf_conntrack_tcp_timeout_time_wait=60
+net.ipv4.tcp_tw_reuse=1
+```
 ### Build
 ``docker build -t jre8sms jre8-sms/.``
 ### Run
@@ -2081,8 +2088,7 @@ speed_download: %{speed_download}\n
 speed_upload: %{speed_upload}\n" > curl-format.txt
 curl -w "@curl-format.txt" -o /dev/null -s http://wordpress.com/
 ```
-same per one line  
-``curl -X POST -d @file server:port -w %{time_connect}:%{time_starttransfer}:%{time_total}``  
+same per one line `curl -X POST -d @file server:port -w %{time_connect}:%{time_starttransfer}:%{time_total}`  or `curl -o /dev/null -s -w 'Establish Connection: %{time_connect}s\nTTFB: %{time_starttransfer}s\nTotal: %{time_total}s\n' https://uma.media/metainfo/yandex_feed/`  
 more detail look here https://blog.josephscott.org/2011/10/14/timing-details-with-curl/  
 
 grep 
