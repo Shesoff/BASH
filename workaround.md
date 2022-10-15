@@ -312,8 +312,7 @@ ssh-keygen -f pub1key.pub -i >> ~/.ssh/authorized_keys
 OpenSSL is expecting the RSA key to be in PKCS#1 format
 `ssh-keygen -f key.pub -e -m pem`
 ### verify certificate:
-openssl s_client -showcerts -connect spdcvc.geolife.lan:636
-**************************************************************
+`openssl s_client -showcerts -connect spdcvc.geolife.lan:636`  
 ### Generage cert
 Generate key:  
 `openssl genrsa -des3 -out private.key 2048`  
