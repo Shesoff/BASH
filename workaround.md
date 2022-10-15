@@ -69,20 +69,13 @@ only root
 mount -t cifs //FILE-SRV-5/acquiring /tmp/test -o username=buh_mail,dom=invest,password=MySuperSecretPass
 ************************************************************
 
-Clear history command
-history -c			or			/home/username/.bach_history
-
-*SELinux*
-	temporarily
-	 disable:
-echo 0 >/selinux/enforce
-setenforce 0
-	 enable:
-echo 1 >/selinux/enforce
-setenforce 1
-	Permanently disable:
-In Fedora Core and RedHat Enterprise, edit /etc/selinux/config
-SELINUX=enforcing change to SELINUX=disabled
+### Clear history command
+`history -c			or			/home/username/.bach_history`  
+## SELinux
+temporarily disable: `echo 0 >/selinux/enforce` or `setenforce 0`
+enable: `echo 1 >/selinux/enforce` or `setenforce 1`
+Permanently disable:  
+In Fedora Core and RedHat Enterprise, edit `/etc/selinux/config` SELINUX=enforcing change to SELINUX=disabled
 **************************************************
 ******************TAR archive*********************
 **************************************************
@@ -115,6 +108,27 @@ find $BACKUP_DIR -maxdepth 1 -type f -ctime +$DAYS_TO_RETAIN -delete
 
 fetchmail -f <pathname> ---- for to define not default path configured file fetchmailrc
 
+## Linux network debug & tuning
+`sysctl -a`  
+`netstat -s`  
+`dmesg -T`  
+```
+net.netfilter.nf_conntrack_tcp_timeout_established=7200
+net.core.somaxconn = 8192
+net.ipv4.ip_local_port_range = 15000 65000
+net.ipv4.tcp_syn_retries = 3
+```
+После изменения somaxconn нужно перезапустить приложение, что бы настройки применились на сокете приложения  
+
+```
+net.ipv4.ip_local_port_range = 1024 65535
+net.netfilter.nf_conntrack_tcp_timeout_fin_wait = 30
+net.netfilter.nf_conntrack_tcp_timeout_syn_recv = 15
+net.netfilter.nf_conntrack_tcp_timeout_syn_sent = 30
+net.netfilter.nf_conntrack_tcp_timeout_time_wait = 60
+net.netfilter.nf_conntrack_tcp_timeout_close = 5
+net.netfilter.nf_conntrack_tcp_timeout_close_wait = 15
+```
 
 
 ***###Debian/Ubuntu###***
@@ -300,24 +314,21 @@ OpenSSL is expecting the RSA key to be in PKCS#1 format
 ### verify certificate:
 openssl s_client -showcerts -connect spdcvc.geolife.lan:636
 **************************************************************
-1. generate key:
-openssl genrsa -des3 -out private.key 2048
-or
-openssl req -out CSR.csr -new -newkey rsa:2048 -nodes -keyout privatekey.key
-**************************************************************
-remove pass|unecrypt key:
-openssl rsa -in private.key -out public.key
-**************************************************************
-1.5. Generate CSR:
-openssl req -new -key private.key -out domain-name.csr
-**************************************************************
-2. generate crt:
-openssl req -new -x509 -days 365 -nodes -out smtpd.cert -keyout smtpd.key
-**************************************************************
+### Generage cert
+Generate key:  
+`openssl genrsa -des3 -out private.key 2048`  
+or  
+`openssl req -out CSR.csr -new -newkey rsa:2048 -nodes -keyout privatekey.key`  
+remove pass|unecrypt key:  
+`openssl rsa -in private.key -out public.key`  
+Generate CSR:  
+`openssl req -new -key private.key -out domain-name.csr`  
+Generate crt:  
+`openssl req -new -x509 -days 365 -nodes -out smtpd.cert -keyout smtpd.key`  
 ### Get certificate from server
-`openssl s_client -showcerts -servername www.example.com -connect www.example.com:443 </dev/null`
+`openssl s_client -showcerts -servername www.example.com -connect www.example.com:443 </dev/null`  
 ### Get fingerprint of certificate
-`openssl s_client -connect www.example.com:443 < /dev/null 2>/dev/null | openssl x509 -fingerprint -sha256 -noout -in /dev/stdin`  
+`openssl s_client -connect www.example.com:443 < /dev/null 2>/dev/null | openssl x509 -fingerprint -sha256 -noout -in /dev/stdin`    
 
 
 
