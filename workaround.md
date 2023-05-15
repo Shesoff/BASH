@@ -466,6 +466,18 @@ munin - alternate cacti
 `nload`  
 `iftop`  
 ## Prometheus
+### Docks
+#### Expression language data type
+* Instant vector - a set of time series containing a single sample for each time series, all sharing the same timestamp
+* Range vector - a set of time series containing a range of data points over time for each time series
+* Scalar - a simple numeric floating point value
+* String - a simple string value; currently unused
+#### Aggregation operators
+can be used to aggregate the elements of a single instant vector, resulting in a new vector of fewer elements with aggregated values  
+Examples:
+`increase(starlette_responses_total{app="$app", kubernetes_namespace="p-layer",status_code!="4.*|5.*"}[5m])` - many vectors (many graphes)
+`sum(increase(starlette_responses_total{app="$app", kubernetes_namespace="p-layer",status_code!="4.*|5.*"}[5m]))` - single vector
+
 ### Get top time series metrics
 `topk(20, count by (__name__, job)({__name__=~".+"}))`  
 ## Check config validation
@@ -998,6 +1010,7 @@ Alfresco задачи, цели
 TTFB = RTT +    
 
 # NGINX #
+`nginx -V 2>&1 | grep --with-http_mp4_module` - grep modules  
 https://www.nginx.com/blog/regular-expression-tester-nginx/  
 self signed самоподписанный сертификат  
 ``sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt``
@@ -1444,7 +1457,7 @@ systemctl daemon-reload
 systemctl restart filebeat
 ***************************************************************
 
-SQUID
+# SQUID
 http://timp87.blogspot.ru/2014/03/squid-ad.html
 http://www.opennet.ru/openforum/vsluhforumID12/7201.html - DROPbox + squid
 
@@ -1550,8 +1563,8 @@ BEGIN
 END;
 $do$;
 ```
-* Create read only user *
-  create psql user:  
+Create read only user  
+create psql user:  
 ```
 postgres@server:~$ createuser --interactive 
 Enter name of role to add: readonly
@@ -1564,7 +1577,7 @@ Shall the new role be allowed to create more new roles? (y/n) n
 postgres=# alter user readonly with password 'readonly';
 ALTER ROLE
 ```
-  grant all the needed privileges  
+grant all the needed privileges  
 ```
 target_database=# GRANT CONNECT ON DATABASE target_database TO readonly;
 GRANT
@@ -1587,7 +1600,7 @@ select pg_database_size('db_name'); - занимаемый разбер в ба�
 pg_table_size();  
 pg_indexes_size()  
 pg_total_relation_size()  
-Топ самых больших таблиц в базе:  
+### Top biggest size of tables 
 ```
 SELECT nspname || '.' || relname AS "relation",
     pg_size_pretty(pg_total_relation_size(C.oid)) AS "total_size"
@@ -2409,8 +2422,8 @@ source /usr/local/etc/bash_completion.d/oc_bash_completion.sh
 `oc config get-clusters`
 * Show all contexts (clusters where I registered)  
 `oc config get-contexts`
-### переименовать текущий контекст
-oc config rename-context $(oc config current-context) NEW_NAME_CONTEXT
+* Rename current context
+`oc config rename-context $(oc config current-context) NEW_NAME_CONTEXT`
 * Change context   
 `oc config use-context context_name`
 * list all projects
@@ -2439,8 +2452,13 @@ oc new-project hello-openshift \
     --description="This is an example project" \
     --display-name="Hello OpenShift"
 ```
+## Networking
+* Port forward  
+`kubectl port-forward service/showcase-api 8080:8080`  
 
-kubectl port-forward service/showcase-api 8080:8080  
+### Routes
+* show default ingress domain  
+`oc get ingresses.config/cluster -o jsonpath={.spec.domain}`  
 
 
 ## Heml
