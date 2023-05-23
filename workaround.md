@@ -281,10 +281,10 @@ ___
 ### DER
 DER формат – это бинарный тип сертификата вместо формата PEM. В PEM формате чаще всего используется расширение файла .cer, но иногда можно встретить и расширение файла .der. Поэтому чтобы отличить SSL сертификат в формате PEM от формата DER, следует открыть его в текстовом редакторе и найти теги начала и окончания сертификата (BEGIN/END). DER SSL сертификаты, как правило, используются на платформах Java.  
 ___
-View contents of DER-encoded certificate file:  
+* View contents of DER-encoded certificate file:  
 `openssl x509 -inform der -in CERTIFICATE.der -text -noout`  
 ___
-DER to PEM:  
+* DER to PEM:  
 `openssl x509 -inform der -in CERTIFICATE.der -out CERTIFICATE.pem`
 ___
 ### PKCS # 7 / P7B - is a container format for digital certificates.  
@@ -1967,7 +1967,16 @@ git submodule update
 git submodule update --init --force --remote
 ```
 
+# GitLab
+#### Kill all pending jobs for a project 
+```ruby
+# gitlab-rails console
+p = Project.find_by_full_path(‘rogue-group/rogue-project’)
+Ci::Pipeline.where(project_id: p.id).where(status: ‘pending’).each {|p| p.cancel}
+exit
+```
 
+____
 
 
 
@@ -2452,6 +2461,10 @@ oc new-project hello-openshift \
     --description="This is an example project" \
     --display-name="Hello OpenShift"
 ```
+* fix deployer  
+`oc policy add-role-to-user edit -z deployer`  
+
+
 ## Networking
 * Port forward  
 `kubectl port-forward service/showcase-api 8080:8080`  
