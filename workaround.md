@@ -14,7 +14,7 @@
 ### install psql
 brew install libpq
 ln -s /usr/local/Cellar/libpq/10.3/bin/psql /usr/local/bin/psql
-### tunnelblic dns timeout
+### tunnelblic dns timeout, dns cache clean
 `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder`
 
 
