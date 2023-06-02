@@ -1968,7 +1968,8 @@ git submodule init
 git submodule update
 git submodule update --init --force --remote
 ```
-
+### Diff between branch and acestors 
+`git diff --name-only release $(git merge-base master release) | egrep '(Sber|Adv|GCore|sber|KHA|SPB|MSK)'`
 # GitLab
 #### Kill all pending jobs for a project 
 ```ruby
@@ -2106,6 +2107,8 @@ curl -L -b headers http://localhost/
 ``curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://hostname/resource``  
 - with XML:  
 ``curl -H "Accept: application/xml" -H "Content-Type: application/xml" -X GET http://hostname/resource``  
+### curl ignore proxy
+`curl --noproxy '*' http://www.stackoverflow.com`
 ### timing details aka latency measuring
 ```
 echo "time_namelookup: %{time_namelookup}\n
