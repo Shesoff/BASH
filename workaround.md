@@ -2720,3 +2720,16 @@ strace -f -e trace=file tmux
 userid=`curl -sS -H 'Authorization: Bearer tokenTokenToken' https://myserver.company.com/api/v4/users/email/username@company.com | jq -r '.id'`
 curl -sS -H 'Authorization: Bearer tokenTokenToken' https://myserver.company.com/api/v4/users/$userid/teams/8yfs9fjym7dwudxh3g6z4znefo/channels | jq '.[].display_name'
 ```
+
+
+# rsyslog
+Рекомендованные настройки
+```
+# An on-disk queue is created for this action. If the remote host is
+# down, messages are spooled to disk and sent when it is up again.
+$ActionQueueFileName ForwardToSIEM # unique name prefix for spool files
+$ActionQueueMaxDiskSpace 1g   # 1gb space limit (use as much as possible)
+$ActionQueueSaveOnShutdown on # save messages to disk on shutdown
+$ActionQueueType LinkedList   # run asynchronously
+$ActionResumeRetryCount -1    # infinite retries if host is down
+```
