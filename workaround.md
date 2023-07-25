@@ -1968,6 +1968,10 @@ git submodule init
 git submodule update
 git submodule update --init --force --remote
 ```
+## git show remote url
+`git remote`
+## git change remote url
+`git remote set-url origin https://git.sberdevices.ru/public-repository/docker.git`
 ### Diff between branch and acestors 
 `git diff --name-only release $(git merge-base master release) | egrep '(Sber|Adv|GCore|sber|KHA|SPB|MSK)'`
 # GitLab
