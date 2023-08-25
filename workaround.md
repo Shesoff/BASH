@@ -2090,6 +2090,8 @@ curl -u username:password -k -i https://p-mm-elasticsearch-master-1:9200/_cluste
 
 
 # curl
+## curl mTLS client cert
+$ curl --cert client.crt --key client.key --cacert ca.crt https://myserver.internal.net:443
 ### download
 curl -u anonymous:digitalenergy -T file.file https://colba.decs.online/remote.php/dav/files/anonymous/anonymous_upload/file.file
 curl -v -u admin:admin123 --upload-file frontend.zip http://nexus.somedomain.local/nexus-2.7.0/service/local/repositories/releases/content/ru/voskhod/scc/scc.portal/%version%/frontend.zip
@@ -2111,6 +2113,9 @@ curl -L -b headers http://localhost/
 ``curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://hostname/resource``  
 - with XML:  
 ``curl -H "Accept: application/xml" -H "Content-Type: application/xml" -X GET http://hostname/resource``  
+## curl with proxy
+curl -x proxy.somedomain.ru:3128 -I -XGET https://api.amplitude.com
+curl -O http://site.name.ru/filename.gz -x proxy.somedomain.ru:3128 
 ### curl ignore proxy
 `curl --noproxy '*' http://www.stackoverflow.com`
 ### timing details aka latency measuring
@@ -2472,6 +2477,19 @@ oc new-project hello-openshift \
 ```
 * fix deployer  
 `oc policy add-role-to-user edit -z deployer`  
+* Get SA token
+```
+# oc describe sa deployer
+Name:                deployer
+Namespace:           p-resetpassword
+Labels:              <none>
+Annotations:         <none>
+Image pull secrets:  deployer-dockercfg-4t9mk
+Mountable secrets:   deployer-dockercfg-4t9mk
+Tokens:              deployer-token-l6llf
+Events:              <none>
+# oc describe secret deployer-token-l6llf
+```
 
 
 ## Networking
@@ -2532,9 +2550,6 @@ https://habr.com/ru/post/358182/
 ## curl
 #### Speed latency http
 curl -w "dns_resolution: %{time_namelookup}, tcp_established: %{time_connect}, ssl_handshake_done: %{time_appconnect}, TTFB: %{time_starttransfer}\n" -o /dev/null -s https://cloudflare-dns.com  
-### curl proxy
-curl -x proxy.somedomain.ru:3128 -I -XGET https://api.amplitude.com
-curl -O http://site.name.ru/filename.gz -x proxy.somedomain.ru:3128 
 ## grep
 ### Last match последнее совпадение
 grep PATTERN nginx.log | tail -1    
