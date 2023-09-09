@@ -1638,12 +1638,12 @@ pg_restore -d db_name /path/to/your/file/dump_name.tar -c -U db_user
 psql --set ON_ERROR_STOP=on dbname < infile
 ```
 ### DB an Role
-#### First variable
+#### First option
 CREATE DATABASE dbname;
 create user testuser;
 alter user testuser with encrypted password 'Qwerty14';
 grant all privileges on database dbname to testuser;
-#### Secont variable
+#### Second option
 CREATE DATABASE dbname;
 CREATE USER user1 password 'P@ssw0rd!';
 ALTER ROLE "user1" WITH LOGIN;
