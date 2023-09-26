@@ -19,6 +19,8 @@ ln -s /usr/local/Cellar/libpq/10.3/bin/psql /usr/local/bin/psql
 
 
 # Linux || Unix
+## Network
+`nstat -az |grep UdpRcvbufErrors` - TSHOOT udp buffers
 ## Namespace
 It's abstraction on OS's resources. Namespace has 7 types: Cgroups, IPC, Network, Mount, PID, User, UTS.
 ## Change default visual & editor
@@ -1415,10 +1417,15 @@ tcpdump -i <interface> -s 65535 -w <some-file>
 tcpdump -i eth0 host 10.10.1.1
 
 
-Zabbix
+# Zabbix
+## zabbix repo
 http://repo.zabbix.com/zabbix/2.4/rhel/7/x86_64/
-
-
+## zabbix prometheus alerts tiggers
+Item types: HTTP agent  
+URL: https://prometheus.server.lan/api/v1/query  
+**Preprocessing**: JSONPath -> `$.data.result[0].value[1]`  
+  
+___
 windows server 2008 2012
 Network and sharing not work not reaspond
 netsh interface tcp set global autotuninglevel=disabled
@@ -1697,6 +1704,9 @@ host    all             all             ::1/128                 md5
 CREATE ROLE redmine LOGIN ENCRYPTED PASSWORD 'my_secret' NOINHERIT VALID UNTIL 'infinity';
 CREATE DATABASE redmine WITH ENCODING='UTF8' OWNER=redmine;
 ```
+## timeouts 
+`show idle_in_transaction_session_timeout;`  
+
 ###
 
 
@@ -2547,6 +2557,8 @@ https://habr.com/ru/post/358182/
 ``gpg --import key_name.gpg``  
 
 # One liners oneliners
+## set rlimit per pid
+`ps axuw |grep process_name |grep -v grep |awk '{ print "prlimit -n60000 -p " $2 }'`
 ## curl
 #### Speed latency http
 curl -w "dns_resolution: %{time_namelookup}, tcp_established: %{time_connect}, ssl_handshake_done: %{time_appconnect}, TTFB: %{time_starttransfer}\n" -o /dev/null -s https://cloudflare-dns.com  
