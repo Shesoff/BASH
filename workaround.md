@@ -359,6 +359,9 @@ yum install python-pip python-devel
 pip install mycli
 
 # Python
+## pip
+install from private repo   
+`pip install --no-cache-dir --index-url https://nexus3.somedomain.ru/repository/Pypi/simple/ poetry`
 ```
 pip freeze > requirements. txt
 ```
@@ -1544,7 +1547,7 @@ WHERE
     -- don't kill my own connection!
     pid <> pg_backend_pid()
     -- don't kill the connections to other databases
-    AND datname = 'prod_layer_db'
+    AND datname = 'dev_aiagent_db'
     ;
 ```
 #### Copy to file
@@ -1897,9 +1900,12 @@ CMD ["/main"]
 ### docker run example
 docker run -d -p 9001:9001 --name syslog -v /var/log:/log mthenw/frontail -U sysadmin -P 12345678 -n 5000 /log/messages
 
-# Docker Swarm
+## Docker Swarm
 `docker node update p-b2b-swarm-sc-msk01 --availability drain`
 
+## Docker registry
+### curl
+`curl https://username:password@privaterepo.yourdomain.com:5001/v2/image-name/tags/list`
 # raid
 ## hpacucli  
 ```
@@ -1952,6 +1958,9 @@ specify private key
 ansible_ssh_private_key_file=/home/user/.ssh/private.key
 Read more: https://github.com/StreisandEffect/streisand/issues/923
 #
+
+# LDAP
+`ldapsearch -LL -D someuser@somedomain.ru -W -H ldap://p-i-dc-sc-m01 -s sub -b DC=somedomain,DC=ru "(anr=sm_isearch)"`
 
 
 
