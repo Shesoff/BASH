@@ -1994,6 +1994,9 @@ git submodule update --init --force --remote
 ### Diff between branch and acestors 
 `git diff --name-only release $(git merge-base master release) | egrep '(Sber|Adv|GCore|sber|KHA|SPB|MSK)'`
 # GitLab
+## Gilab CI
+### regexp rules
+`    - if: $CI_PIPELINE_SOURCE == "push" && ($GITLAB_USER_LOGIN =~ /^group_\d+_bot_.*$/ || $GITLAB_USER_NAME == $CLOUD_DEPLOY_TUZ_NAME)`
 #### Kill all pending jobs for a project 
 ```ruby
 # gitlab-rails console
