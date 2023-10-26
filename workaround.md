@@ -1083,7 +1083,7 @@ locatioin ~ /test[0-9]
 locatin *~ /test[0-9]  
 - prefered match then regexp  
 location ^~ /test  
-### matching order
+### matching order = location priority
 1. = exact  
 2. ^~ prefered longest prefix mattch regexp  
 3. ~ и ~* regexp. ~ регистрозависимый, ~* регистронезависимый  
@@ -1533,6 +1533,8 @@ select * from pg_hba_file_rules ;
 **********************
 /var/lib/pgpro/std-10/data/pg_hba.conf
 **********************
+### Login connect
+`psql -h /data/pgsql/ -p 15432`
 ### Performance
 EXPLAIN ANALYZE SELECT * from DB_NAME;
 ### Show activity connections
@@ -1605,13 +1607,13 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public
 ```
 
 ### Other
-pg_config - показывает ключи с которыми PostgreSQL был собран
-select pg_database_size('db_name'); - занимаемый разбер в байтах
+`pg_config` - показывает ключи с которыми PostgreSQL был собран  
+`select pg_database_size('db_name');` - занимаемый разбер в байтах  
 `select pg_size_pretty(pg_database_size('db_name'));`  
 `SELECT pg_size_pretty (pg_total_relation_size ('schema_name.table_name'));`  
-pg_table_size();  
-pg_indexes_size()  
-pg_total_relation_size()  
+`pg_table_size();`  
+`pg_indexes_size()`   
+`pg_total_relation_size()`  
 ### Top biggest size of tables 
 ```
 SELECT nspname || '.' || relname AS "relation",
