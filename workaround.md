@@ -1970,6 +1970,9 @@ Read more: https://github.com/StreisandEffect/streisand/issues/923
 https://product.hubspot.com/blog/git-and-github-tutorial-for-beginners
 .git/info/exclude
 git config --global core.autocrlf input  
+## Revert
+### Revert one file
+`git checkout da9cc5f -- README.md`
 ## Merge
 Merge one file or directory from other branch  
 `git checkout dev views/default/menu.html` -  file menu.html from dev branch will merge to current branch  
