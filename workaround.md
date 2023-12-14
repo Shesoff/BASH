@@ -2781,3 +2781,11 @@ $ActionQueueSaveOnShutdown on # save messages to disk on shutdown
 $ActionQueueType LinkedList   # run asynchronously
 $ActionResumeRetryCount -1    # infinite retries if host is down
 ```
+
+
+# Jira
+### get issutetype in porject 
+```
+curl -s -u apshestakov:$JIRA_PASSWORD -X GET -H 'Accept: application/json' \
+> https://tasks.sberdevices.ru/rest/api/2/project/13203 | jq '.issueTypes[] | {id, name}'
+```
