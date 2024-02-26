@@ -1552,6 +1552,25 @@ WHERE
     AND datname = 'dev_aiagent_db'
     ;
 ```
+### Clean activity connections with spesific user
+```
+SELECT
+    pg_terminate_backend(pid)
+FROM
+    pg_stat_activity
+WHERE
+    -- don't kill my own connection!
+    pid <> pg_backend_pid()
+    -- don't kill the connections to other databases
+    AND datname = 'prod_layer_db'
+    AND usename = 'vsr_user'
+    ;
+```
+
+```
+select pg_cancel_backend(69681);
+```
+where 69681 pid number
 #### Copy to file
 `\copy (select * from pg_stat_activity) to /tmp/pg_stat_activity.csv csv;`  
 ### Grant privileges 
