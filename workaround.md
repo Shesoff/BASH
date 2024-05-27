@@ -2739,11 +2739,15 @@ for pid in `pidof nginx`; do echo "$(< /proc/$pid/cmdline)"; egrep 'files|Limit'
 ### memory info
 ``info memory``      
 ### get all keys
-``reids-cli --scan``
+``reids-cli --scan`` or `KEYS *`
+### show type key
+`TYPE key_name`
 ### get key's value
-``MGET``
+``MGET`` or `GET key_name`  
 ### delete/remove key:value
 ``DEL keyname``  
+### Show set's members
+`SMEMBER key_name`  
 ### Redis: OOM command not allowed when used memory > ‘maxmemory
 https://ma.ttias.be/redis-oom-command-not-allowed-used-memory-maxmemory/  
 
