@@ -1927,6 +1927,8 @@ docker run -d -p 9001:9001 --name syslog -v /var/log:/log mthenw/frontail -U sys
 ## Docker registry
 ### curl
 `curl https://username:password@privaterepo.yourdomain.com:5001/v2/image-name/tags/list`
+#### curl resolve
+`curl http://www.example.com/test/test --resolve www.example.com:443:127.0.0.1`
 # raid
 ## hpacucli  
 ```
@@ -2747,7 +2749,7 @@ for pid in `pidof nginx`; do echo "$(< /proc/$pid/cmdline)"; egrep 'files|Limit'
 ### delete/remove key:value
 ``DEL keyname``  
 ### Show set's members
-`SMEMBER key_name`  
+`SMEMBERS key_name`  
 ### Redis: OOM command not allowed when used memory > ‘maxmemory
 https://ma.ttias.be/redis-oom-command-not-allowed-used-memory-maxmemory/  
 
