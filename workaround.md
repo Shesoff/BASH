@@ -2744,6 +2744,8 @@ for pid in `pidof nginx`; do echo "$(< /proc/$pid/cmdline)"; egrep 'files|Limit'
 ``reids-cli --scan`` or `KEYS *`
 ### show type key
 `TYPE key_name`
+### show all keys
+`keys *`   
 ### get key's value
 ``MGET`` or `GET key_name`  
 ### delete/remove key:value
